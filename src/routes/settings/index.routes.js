@@ -1,13 +1,13 @@
-import Agency from "./Agency.routes";
-import AgencyDivision from "./AgencyDivision.routes";
-import Answer from "./Answer.routes";
-import Area from "./Area.routes";
-import Permission from "./Permission.routes";
-import PermissionRole from "./PermissionRole.routes";
-import Role from "./Role.routes";
-import User from "./User.routes";
+import Agency from "./Agency.routes.js";
+import AgencyDivision from "./AgencyDivision.routes.js";
+import Answer from "./Answer.routes.js";
+import Area from "./Area.routes.js";
+import Permission from "./Permission.routes.js";
+import PermissionRole from "./PermissionRole.routes.js";
+import Role from "./Role.routes.js";
+import User from "./User.routes.js";
 
-export{
+const settings = [
     Agency,
     AgencyDivision,
     Answer,
@@ -16,4 +16,6 @@ export{
     PermissionRole,
     Role,
     User
-}
+]
+
+export {settings};

@@ -1,6 +1,8 @@
 import {DataTypes} from "sequelize";
 import { config } from "../functions/connect.js";
 
+import Presentation from "./Presentation.model.js";
+
 const PresentationItem = config.define('PresentationItem', {
   idPresentationItem: {
     type: DataTypes.INTEGER,
@@ -21,6 +23,6 @@ const PresentationItem = config.define('PresentationItem', {
 });
 
 // Suponiendo que PresentationItem pertenece a Presentation
-PresentationItem.belongsTo(config.model('Presentation'), { foreignKey: 'idPresentation' });
+PresentationItem.belongsTo(Presentation, { foreignKey: 'idPresentation' });
 
 export default PresentationItem;

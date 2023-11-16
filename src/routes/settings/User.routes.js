@@ -2,7 +2,8 @@ import { Router as expressRouter } from "express";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
-import User from "../../bd/models/User.model";
+import User from "../../bd/models/User.model.js";
+import Role from "../../bd/models/Role.model.js";
 
 const routes = expressRouter();
 
@@ -21,9 +22,34 @@ export const verifyToken = (token, secret) => {
 
 routes.post('/user', async (req, res) => {
   try {
-    // Implement any password hashing or validation here if necessary
     const user = await User.create(req.body);
     res.status(201).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+routes.post('/user/login', async (req, res) => {
+  try {
+    const { user, password } = req.body;
+
+    const dataUser = await User.findOne({ where: { user }, include:[Role] });
+    if(dataUser){
+    const isValidPassword = await bcrypt
+        .compare(password, dataUser.password)
+        .then(res => {
+          return res;
+        })
+        .catch(err => console.error(err.message));
+        if(isValidPassword){
+          res.status(201).json({isValid:isValidPassword, userData: {dataUser}});
+        }else{
+          res.status(501).json({error: true, message: "Contraseña invalida para este usuario." });
+        }  
+    }else{
+      res.status(501).json({error: true, message: "Este usuario no existe" });
+    }
+    
   } catch (error) {
     res.status(400).send(error);
   }

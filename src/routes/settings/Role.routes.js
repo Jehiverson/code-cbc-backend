@@ -1,5 +1,5 @@
 import { Router as expressRouter } from "express";
-import Role from "../../bd/models/Role.model";
+import Role from "../../bd/models/Role.model.js";
 
 const routes = expressRouter();
 

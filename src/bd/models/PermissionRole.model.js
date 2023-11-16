@@ -1,6 +1,9 @@
 import {DataTypes} from "sequelize";
 import { config } from "../functions/connect.js";
 
+import Role from "./Role.model.js";
+import Permission from "./Permission.model.js";
+
 const PermissionRole = config.define('PermissionRole', {
   idPermissionRole: {
     type: DataTypes.INTEGER,
@@ -20,7 +23,7 @@ const PermissionRole = config.define('PermissionRole', {
 });
 
 // Relaciones
-PermissionRole.belongsTo(config.model('Permission'), { foreignKey: 'idPermission' });
-PermissionRole.belongsTo(config.model('Role'), { foreignKey: 'idRole' });
+PermissionRole.belongsTo(Permission, { foreignKey: 'idPermission' });
+PermissionRole.belongsTo(Role, { foreignKey: 'idRole' });
 
 export default PermissionRole;

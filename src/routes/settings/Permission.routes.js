@@ -1,5 +1,5 @@
 import { Router as expressRouter } from "express";
-import Permission from "../../bd/models/Permission.model";
+import Permission from "../../bd/models/Permission.model.js";
 
 const routes = expressRouter();
 

@@ -1,5 +1,5 @@
 import { Router as expressRouter } from "express";
-import Agency from "../../bd/models/Agency.model";
+import Agency from "../../bd/models/Agency.model.js";
 
 const routes = expressRouter();
 

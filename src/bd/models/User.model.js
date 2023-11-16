@@ -1,6 +1,8 @@
 import {DataTypes} from "sequelize";
 import { config } from "../functions/connect.js";
 
+import Role from "./Role.model.js";
+
 const User = config.define('User', {
   idUser: {
     type: DataTypes.INTEGER,
@@ -8,6 +10,7 @@ const User = config.define('User', {
     primaryKey: true,
     autoIncrement: true,
   },
+  idRole: DataTypes.INTEGER,
   name: {
     type: DataTypes.STRING,
   },
@@ -32,5 +35,8 @@ const User = config.define('User', {
   freezeTableName: true,
   timestamps: true,
 });
+
+User.belongsTo(Role, { foreignKey: 'idRole' });
+
 
 export default User;

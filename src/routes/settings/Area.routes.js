@@ -1,5 +1,5 @@
 import { Router as expressRouter } from "express";
-import Area from "../../bd/models/Area.model";
+import Area from "../../bd/models/Area.model.js";
 
 const routes = expressRouter();
 
