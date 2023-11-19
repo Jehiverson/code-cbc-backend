@@ -1,4 +1,4 @@
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
 
 const Presentation = config.define('Presentation', {
@@ -7,6 +7,10 @@ const Presentation = config.define('Presentation', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true
+  },
+  idQuiz: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,

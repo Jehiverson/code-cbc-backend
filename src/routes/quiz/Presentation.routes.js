@@ -1,5 +1,6 @@
 import { Router as expressRouter } from "express";
 import Presentation from "../../bd/models/Presentation.model.js";
+import PresentationItem from "../../bd/models/PresentationItem.model.js";
 
 const routes = expressRouter();
 
@@ -24,6 +25,22 @@ routes.get('/presentation', async (req, res) => {
 routes.get('/presentation/:id', async (req, res) => {
   try {
     const presentation = await Presentation.findByPk(req.params.id);
+    if (presentation) {
+      res.status(200).send(presentation);
+    } else {
+      res.status(404).send({ message: 'Presentation not found' });
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+routes.get('/presentation/quiz/:id', async (req, res) => {
+  try {
+    const presentation = await Presentation.findOne({
+      where: { idQuiz: req.params.id },
+      include: [{ model: PresentationItem }]
+    });
     if (presentation) {
       res.status(200).send(presentation);
     } else {
@@ -66,6 +83,5 @@ routes.delete('/presentation/:id', async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 
 export default routes;

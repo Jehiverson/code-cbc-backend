@@ -1,4 +1,4 @@
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
 
 import Quiz from "./Quiz.model.js";
@@ -23,5 +23,6 @@ const Question = config.define('Question', {
 
 // Suponiendo que Question pertenece a Quiz
 Question.belongsTo(Quiz, { foreignKey: 'idQuiz' });
+Quiz.hasMany(Question, { foreignKey: 'idQuiz' })
 
 export default Question;

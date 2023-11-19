@@ -33,25 +33,25 @@ routes.post('/user/login', async (req, res) => {
   try {
     const { user, password } = req.body;
 
-    const dataUser = await User.findOne({ where: { user }, include:[Role] });
-    if(dataUser){
-    const isValidPassword = await bcrypt
+    const dataUser = await User.findOne({ where: { user }, include: [Role] });
+    if (dataUser) {
+      const isValidPassword = await bcrypt
         .compare(password, dataUser.password)
         .then(res => {
           return res;
         })
         .catch(err => console.error(err.message));
-        if(isValidPassword){
-          res.status(201).json({isValid:isValidPassword, userData: {dataUser}});
-        }else{
-          res.status(501).json({error: true, message: "Contraseña invalida para este usuario." });
-        }  
-    }else{
-      res.status(501).json({error: true, message: "Este usuario no existe" });
+      if (isValidPassword) {
+        res.status(201).json({ isValid: isValidPassword, userData: { dataUser } });
+      } else {
+        res.status(202).json({ error: true, message: "Contraseña invalida para este usuario." });
+      }
+    } else {
+      res.status(202).json({ error: true, message: "Este usuario no existe" });
     }
-    
+
   } catch (error) {
-    res.status(400).send(error);
+    res.status(501).send(error);
   }
 });
 
@@ -79,7 +79,7 @@ routes.get('/user/:id', async (req, res) => {
 
 routes.put('/user/:id', async (req, res) => {
   try {
-    
+
     const { password } = req.body;
     const saltRounds = 10;
     console.log(password);
@@ -88,7 +88,7 @@ routes.put('/user/:id', async (req, res) => {
     const hash = await bcrypt.hash(`${password}`, salt);
     console.log("PASSWORD", hash);
 
-    const updated = await User.update({...req.body, password: hash}, {
+    const updated = await User.update({ ...req.body, password: hash }, {
       where: { idUser: req.params.id }
     });
 

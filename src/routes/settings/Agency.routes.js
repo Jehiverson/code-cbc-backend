@@ -34,6 +34,21 @@ routes.get('/agency/:id', async (req, res) => {
     }
 });
 
+routes.get('/agency/area/:id', async (req, res) => {
+    try {
+        const agency = await Agency.findAll({
+            where: { idArea: req.params.id },
+        });
+        if (agency) {
+            res.status(200).send(agency);
+        } else {
+            res.status(404).send({ message: 'Agency Area not found' });
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 routes.put('/agency/:id', async (req, res) => {
     try {
         const updated = await Agency.update(req.body, {

@@ -1,5 +1,6 @@
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
+import Question from "./Question.model.js";
 
 const Answer = config.define('Answer', {
   idAnswers: {
@@ -7,6 +8,10 @@ const Answer = config.define('Answer', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true
+  },
+  idQuestion: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
   description: DataTypes.TEXT,
   isCorrect: DataTypes.BOOLEAN,
@@ -18,5 +23,8 @@ const Answer = config.define('Answer', {
   freezeTableName: true,
   timestamps: true
 });
+
+Answer.belongsTo(Question, { foreignKey: 'idQuestion' });
+Question.hasMany(Answer, { foreignKey: 'idQuestion' })
 
 export default Answer;
