@@ -75,4 +75,18 @@ routes.delete('/user-quiz/:id', async (req, res) => {
   }
 });
 
+routes.get('/user/:idUser/quiz/:idQuiz', async (req, res) => {
+  try {
+    const userQuiz = await UserQuiz.findAll({
+      where: {
+        idUser: req.params.idUser,
+        idQuiz: req.params.idQuiz,
+      },
+    });
+    res.status(200).send(userQuiz);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 export default routes;
