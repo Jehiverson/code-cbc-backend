@@ -31,7 +31,7 @@ routes.get('/user-attempts-quiz/:id', async (req, res) => {
     if (userAttemptsQuiz) {
       res.status(200).send(userAttemptsQuiz);
     } else {
-      res.status(404).send({ message: 'User Attempts Quiz not found' });
+      res.status(404).send({ message: 'User Attempts Quiz not found', data: null });
     }
   } catch (error) {
     res.status(500).send(error);

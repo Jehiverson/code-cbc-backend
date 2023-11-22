@@ -5,8 +5,10 @@ const routes = expressRouter();
 
 routes.post('/user-answer', async (req, res) => {
   try {
-    const userAnswer = await UserAnswer.create(req.body);
-    res.status(201).send(userAnswer);
+      req.body.map(async(item) => {
+        await UserAnswer.create(item);
+      });
+      res.status(200).send("created")
   } catch (error) {
     res.status(400).send(error);
   }

@@ -15,6 +15,7 @@ const UserAnswer = config.define('UserAnswer', {
   idUser: DataTypes.INTEGER,
   idQuestion: DataTypes.INTEGER,
   idAnswer: DataTypes.INTEGER,
+  attempt: DataTypes.INTEGER,
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE
