@@ -2,6 +2,7 @@ import {DataTypes} from "sequelize";
 import { config } from "../functions/connect.js";
 
 import Role from "./Role.model.js";
+import Area from "./Area.model.js";
 
 const User = config.define('User', {
   idUser: {
@@ -11,6 +12,7 @@ const User = config.define('User', {
     autoIncrement: true,
   },
   idRole: DataTypes.INTEGER,
+  idArea: DataTypes.INTEGER,
   name: {
     type: DataTypes.STRING,
   },
@@ -37,6 +39,7 @@ const User = config.define('User', {
 });
 
 User.belongsTo(Role, { foreignKey: 'idRole' });
+User.belongsTo(Area, { foreignKey: 'idArea' });
 
 
 export default User;

@@ -14,6 +14,7 @@ const UserQuiz = config.define('UserQuiz', {
   idUser: DataTypes.INTEGER,
   idQuiz: DataTypes.INTEGER,
   attempts: DataTypes.INTEGER,
+  aproved: DataTypes.INTEGER,
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE

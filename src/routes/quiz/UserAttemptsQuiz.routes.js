@@ -38,6 +38,21 @@ routes.get('/user-attempts-quiz/:id', async (req, res) => {
   }
 });
 
+routes.get('/user-attempts-quiz/:idUser/:idQuiz', async (req, res) => {
+  try {
+    const userAttemptsQuiz = await UserAttemptsQuiz.findOne({
+      where: {
+        idUser: req.params.idUser,
+        idQuiz: req.params.idQuiz,
+      },
+      include: ['User', 'Quiz']
+    });
+    res.status(200).send(userAttemptsQuiz);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 routes.put('/user-attempts-quiz/:id', async (req, res) => {
   try {
     const updated = await UserAttemptsQuiz.update(req.body, {

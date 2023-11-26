@@ -1,4 +1,4 @@
-import {DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
 
 import Quiz from "./Quiz.model.js";
@@ -11,6 +11,7 @@ const UserScoreQuiz = config.define('UserScoreQuiz', {
     autoIncrement: true
   },
   idQuiz: DataTypes.INTEGER,
+  idUser: DataTypes.INTEGER,
   quizTime: DataTypes.INTEGER,
   score: DataTypes.INTEGER,
   createdAt: DataTypes.DATE,
