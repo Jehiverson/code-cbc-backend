@@ -2,7 +2,8 @@ import {DataTypes} from "sequelize";
 import { config } from "../functions/connect.js";
 
 import Role from "./Role.model.js";
-import Area from "./Area.model.js";
+import Agency from "./Agency.model.js";
+import Division from "./Division.model.js";
 
 const User = config.define('User', {
   idUser: {
@@ -11,8 +12,9 @@ const User = config.define('User', {
     primaryKey: true,
     autoIncrement: true,
   },
+  idDivision: DataTypes.INTEGER,
+  idAgency: DataTypes.INTEGER,
   idRole: DataTypes.INTEGER,
-  idArea: DataTypes.INTEGER,
   name: {
     type: DataTypes.STRING,
   },
@@ -38,8 +40,13 @@ const User = config.define('User', {
   timestamps: true,
 });
 
-User.belongsTo(Role, { foreignKey: 'idRole' });
-User.belongsTo(Area, { foreignKey: 'idArea' });
 
+User.belongsTo(Role, {foreignKey: 'idRole'});
+
+User.belongsTo(Division, {foreignKey: 'idDivision'});
+Division.hasOne(User, {foreignKey: 'idDivision'});
+
+User.belongsTo(Agency, {foreignKey: 'idAgency'});
+Agency.hasOne(User, {foreignKey: 'idAgency'});
 
 export default User;

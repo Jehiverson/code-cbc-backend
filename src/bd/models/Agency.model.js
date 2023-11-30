@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
+import Area from "./Area.model.js";
 
 const Agency = config.define('Agency', {
   idAgency: {
@@ -18,5 +19,8 @@ const Agency = config.define('Agency', {
   freezeTableName: true,
   timestamps: true
 });
+
+Agency.belongsTo(Area, {foreignKey: 'idArea'});
+Area.hasMany(Agency, { foreignKey: 'idArea' });
 
 export default Agency;

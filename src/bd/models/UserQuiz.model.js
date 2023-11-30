@@ -25,7 +25,9 @@ const UserQuiz = config.define('UserQuiz', {
 });
 
 // Suponiendo que UserQuiz pertenece a User y a Quiz
-UserQuiz.belongsTo(User, { foreignKey: 'idUser' });
+UserQuiz.belongsTo(User, { foreignKey: 'idUser'});
+User.hasMany(UserQuiz, {foreignKey: 'idUser', as: 'UserQuiz'});
+
 UserQuiz.belongsTo(Quiz, { foreignKey: 'idQuiz' });
 
 export default UserQuiz;

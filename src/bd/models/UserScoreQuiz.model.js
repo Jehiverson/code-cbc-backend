@@ -12,7 +12,7 @@ const UserScoreQuiz = config.define('UserScoreQuiz', {
   },
   idQuiz: DataTypes.INTEGER,
   idUser: DataTypes.INTEGER,
-  quizTime: DataTypes.INTEGER,
+  quizTime: DataTypes.STRING,
   score: DataTypes.INTEGER,
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE
@@ -24,5 +24,6 @@ const UserScoreQuiz = config.define('UserScoreQuiz', {
 
 // Relaciones
 UserScoreQuiz.belongsTo(Quiz, { foreignKey: 'idQuiz' });
+Quiz.hasMany(UserScoreQuiz, {foreignKey: "idQuiz"});
 
 export default UserScoreQuiz;
