@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
 
-import Quiz from "./Quiz.model.js";
+import UserQuiz from "./UserQuiz.model.js";
 
 const UserScoreQuiz = config.define('UserScoreQuiz', {
   idUserScore: {
@@ -10,8 +10,7 @@ const UserScoreQuiz = config.define('UserScoreQuiz', {
     primaryKey: true,
     autoIncrement: true
   },
-  idQuiz: DataTypes.INTEGER,
-  idUser: DataTypes.INTEGER,
+  idUserQuiz: DataTypes.INTEGER,
   quizTime: DataTypes.STRING,
   score: DataTypes.INTEGER,
   createdAt: DataTypes.DATE,
@@ -23,7 +22,7 @@ const UserScoreQuiz = config.define('UserScoreQuiz', {
 });
 
 // Relaciones
-UserScoreQuiz.belongsTo(Quiz, { foreignKey: 'idQuiz' });
-Quiz.hasMany(UserScoreQuiz, {foreignKey: "idQuiz"});
+UserScoreQuiz.belongsTo(UserQuiz, { foreignKey: 'idUserQuiz' });
+UserQuiz.hasOne(UserScoreQuiz, {foreignKey: "idUserQuiz"});
 
 export default UserScoreQuiz;

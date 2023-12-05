@@ -110,34 +110,16 @@ routes.get("/general/pie", async (req, res) => {
   const dataResultsAproved = await UserQuiz.count({where: {aproved: 1}})
   const dataResultsReproved = await UserQuiz.count({where: {aproved: 0}})
 
-  // const usersByArea = await User.findAll({
-  //   attributes: ['idArea', [Sequelize.fn('COUNT', Sequelize.col('idUser')), 'total']],
-  //   group: ['idArea']
-  // });
+  let query = `SELECT [Area].[name], COUNT([Agencies->User].[idUser]) AS [total_usuarios] FROM [Area] AS [Area] LEFT OUTER JOIN [Agency] AS [Agencies] ON [Area].[idArea] = [Agencies].[idArea] LEFT OUTER JOIN [User] AS [Agencies->User] ON [Agencies].[idAgency] = [Agencies->User].[idAgency] GROUP BY [Area].[name];`
 
-  const usersByArea = await Area.findAll({
-    attributes: ['name', [Sequelize.fn('COUNT', Sequelize.col('Agencies.User.idUser')), 'total_usuarios']],
-    include: [
-      {
-        model: Agency,
-        attributes: [],
-        include: [
-          {
-            model: User,
-            attributes: []
-          }
-        ]
-      }
-    ],
-    group: ['Area.idArea', 'Area.name']
-  });
+  const usersByArea = await config.query(query)
 
   res.status(200).send({
     totaInscritos: data,
     activeUsers: countUniqueUsers[0],
     aproved: dataResultsAproved,
     reproved: dataResultsReproved,
-    usersByArea
+    usersByArea: usersByArea[0]
   })
 })
 
@@ -157,26 +139,37 @@ routes.get("/general/results/division", async (req, res) => {
       attributes: [
         'name',
         [
-          Sequelize.literal('COUNT(CASE WHEN "User->UserQuiz"."aproved" = 1 THEN 1 END)'),
+          Sequelize.literal('COUNT(CASE WHEN "Areas->Agencies->User->UserQuiz"."aproved" = 1 THEN 1 END)'),
           'aproved',
         ],
         [
-          Sequelize.literal('COUNT(CASE WHEN "User->UserQuiz"."aproved" = 0 THEN 1 END)'),
+          Sequelize.literal('COUNT(CASE WHEN "Areas->Agencies->User->UserQuiz"."aproved" = 0 THEN 1 END)'),
           'reproved',
         ],
       ],
       include: [
         {
-          model: User,
+          model: Area,
           attributes: [],
           include: [
-            {
-              model: UserQuiz,
-              as: 'UserQuiz',
+            {model: Agency,
               attributes: [],
-            },
-          ],
-        },
+              include: [
+                {
+                  model: User,
+                  attributes: [],
+                  include: [
+                    {
+                      model: UserQuiz,
+                      as: 'UserQuiz',
+                      attributes: [],
+                    },
+                  ],
+                },
+              ]
+            }
+          ]
+        }
       ],
       group: ['Division.idDivision', 'Division.name'],
     });
@@ -237,29 +230,31 @@ routes.get("/general/results/area", async (req, res) => {
 
 routes.get("/general/users/area", async (req, res) => {
   try {
-    const usersByArea = await Area.findAll({
-      attributes: [
-        'name',
-        [Sequelize.fn('COUNT', Sequelize.col('Agencies.User.idUser')), 'total_users']
-      ],
-      include: [
-        {
-          model: Agency,
-          attributes: [],
-          include: [
-            {
-              model: User,
-              attributes: [],
-              duplicating: false,
-            },
-          ],
-        },
-      ],
-      group: ['Area.idArea', 'Area.name'],
-    });
-
+    let query = `SELECT [Area].[name], COUNT([Agencies->User].[idUser]) AS [total_users] FROM [Area] AS [Area] LEFT OUTER JOIN [Agency] AS [Agencies] ON [Area].[idArea] = [Agencies].[idArea] LEFT OUTER JOIN [User] AS [Agencies->User] ON [Agencies].[idAgency] = [Agencies->User].[idAgency] GROUP BY [Area].[name];`
+    // const usersByArea = await Area.findAll({
+    //   attributes: [
+    //     'name',
+    //     [Sequelize.fn('COUNT', Sequelize.col('Agencies.User.idUser')), 'total_users']
+    //   ],
+    //   include: [
+    //     {
+    //       model: Agency,
+    //       attributes: [],
+    //       include: [
+    //         {
+    //           model: User,
+    //           attributes: [],
+    //           duplicating: false,
+    //         },
+    //       ],
+    //     },
+    //   ],
+    //   group: ['Area.name'],
+    // });
+    const usersByArea = await config.query(query);
+    console.log("[ asdasd ]", usersByArea)
     res.status(200).send({
-      usersByArea
+      usersByArea: usersByArea[0]
     })
   } catch (error) {
     console.log(error)
@@ -271,24 +266,24 @@ routes.get("/general/results/division/area", async (req, res) => {
   try {
     let query = `SELECT
     [Division].[name] AS 'division_name',
-    [User->Agency->Area].[name] AS 'area_name',
+    [Area].[name] AS 'area_name',
     COUNT(CASE WHEN "User->UserQuiz"."aproved" = 1 THEN 1 END) AS 'approved',
     COUNT(CASE WHEN "User->UserQuiz"."aproved" = 0 THEN 1 END) AS 'reproved'
       FROM
         [Division] AS [Division]
       LEFT OUTER JOIN
-        [User] AS [User] ON [Division].[idDivision] = [User].[idDivision]
+        [Area] AS [Area] ON [Division].[idDivision] = [Area].idDivision
+      LEFT OUTER JOIN
+        [Agency] AS [User->Agency] ON [Area].[idArea] = [User->Agency].[idArea]
+      LEFT OUTER JOIN
+        [User] AS [User] ON [User->Agency].[idAgency] = [User].[idAgency]
       LEFT OUTER JOIN
         [UserQuiz] AS [User->UserQuiz] ON [User].[idUser] = [User->UserQuiz].[idUser]
-      LEFT OUTER JOIN
-        [Agency] AS [User->Agency] ON [User].[idAgency] = [User->Agency].[idAgency]
-      LEFT OUTER JOIN
-        [Area] AS [User->Agency->Area] ON [User->Agency].[idArea] = [User->Agency->Area].[idArea]
       GROUP BY
         [Division].[idDivision],
         [Division].[name],
-        [User->Agency->Area].[name],
-        [User->Agency->Area].[idArea];
+        [Area].[name],
+        [Area].[idArea];
     `;
 
     const usersByDivisionAndArea = await config.query(query);
@@ -337,14 +332,20 @@ routes.get("/general/advence/users", async (req, res) => {
           model: UserQuiz,
           as: "UserQuiz",
           include: [
+            {model: Quiz},
+            {model: UserScoreQuiz}
+          ]
+        },
+        {model: Agency,
+          include: [
             {
-              model: Quiz,
+              model: Area,
               include: [
-                {model: UserScoreQuiz}
+                {model: Division}
               ]
             }
           ]
-        }
+        },
       ]
     })
     res.status(200).send(data)

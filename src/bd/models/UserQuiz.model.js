@@ -29,5 +29,6 @@ UserQuiz.belongsTo(User, { foreignKey: 'idUser'});
 User.hasMany(UserQuiz, {foreignKey: 'idUser', as: 'UserQuiz'});
 
 UserQuiz.belongsTo(Quiz, { foreignKey: 'idQuiz' });
+Quiz.hasMany(UserQuiz, { foreignKey: 'idQuiz' });
 
 export default UserQuiz;
