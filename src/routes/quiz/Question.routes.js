@@ -2,6 +2,7 @@ import { Router as expressRouter } from "express";
 import Question from "../../bd/models/Question.model.js";
 import Quiz from "../../bd/models/Quiz.model.js";
 import Answer from "../../bd/models/Answer.model.js";
+import { groupBy } from "../../utils.js";
 
 
 const routes = expressRouter();
@@ -18,7 +19,10 @@ routes.post('/question', async (req, res) => {
 routes.get('/question', async (req, res) => {
   try {
     const questions = await Question.findAll({
-      include: [{ model: Quiz }]
+      include: [
+        {model: Quiz},
+        {model: Answer}
+      ]
     });
     res.status(200).send(questions);
   } catch (error) {
@@ -47,8 +51,13 @@ routes.get('/question/quiz/:id', async (req, res) => {
       where: { idQuiz: req.params.id },
       include: [{ model: Answer }]
     });
-    if (question) {
-      res.status(200).send(question);
+    let tmpData = []
+    question.forEach((item) => tmpData.push(item.dataValues))
+    const dataGroup = groupBy(tmpData, "noQuestion")
+    // console.log("data =>", dataGroup);
+
+    if (dataGroup) {
+      res.status(200).send(dataGroup);
     } else {
       res.status(404).send({ message: 'Question not found' });
     }

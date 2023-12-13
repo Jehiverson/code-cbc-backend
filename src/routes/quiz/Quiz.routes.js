@@ -16,7 +16,11 @@ routes.post('/quiz', async (req, res) => {
 
 routes.get('/quiz', async (req, res) => {
   try {
-    const quizzes = await Quiz.findAll();
+    const quizzes = await Quiz.findAll({
+      include: [{model: Question}],
+      where: {state: "Activo"},
+      order: [['title', 'ASC']]
+    });
     res.status(200).send(quizzes);
   } catch (error) {
     console.log("Error", error)

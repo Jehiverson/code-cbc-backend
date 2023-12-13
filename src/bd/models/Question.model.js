@@ -1,8 +1,6 @@
 import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
 
-import Quiz from "./Quiz.model.js";
-
 const Question = config.define('Question', {
   idQuestion: {
     type: DataTypes.INTEGER,
@@ -11,7 +9,8 @@ const Question = config.define('Question', {
     autoIncrement: true
   },
   idQuiz: DataTypes.INTEGER,
-  description: DataTypes.TEXT,
+  description: DataTypes.STRING,
+  noQuestion: DataTypes.INTEGER,
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE
@@ -20,9 +19,5 @@ const Question = config.define('Question', {
   freezeTableName: true,
   timestamps: true
 });
-
-// Suponiendo que Question pertenece a Quiz
-Question.belongsTo(Quiz, { foreignKey: 'idQuiz' });
-Quiz.hasMany(Question, { foreignKey: 'idQuiz' })
 
 export default Question;

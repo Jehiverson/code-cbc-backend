@@ -1,5 +1,6 @@
 import { Router as expressRouter } from "express";
 import Answer from "../../bd/models/Answer.model.js";
+import Question from "../../bd/models/Question.model.js";
 
 const routes = expressRouter();
 
@@ -14,7 +15,10 @@ routes.post('/answer', async (req, res) => {
 
 routes.get('/answer', async (req, res) => {
     try {
-        const answers = await Answer.findAll();
+        const answers = await Answer.findAll({
+            include: [{model: Question}]
+        });
+        console.log("DATA ====>", answers);
         res.status(200).send(answers);
     } catch (error) {
         res.status(500).send(error);

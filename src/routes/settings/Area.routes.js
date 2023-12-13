@@ -1,5 +1,6 @@
 import { Router as expressRouter } from "express";
 import Area from "../../bd/models/Area.model.js";
+import Division from "../../bd/models/Division.model.js";
 
 const routes = expressRouter();
 
@@ -14,7 +15,9 @@ routes.post('/area', async (req, res) => {
 
 routes.get('/area', async (req, res) => {
     try {
-        const areas = await Area.findAll();
+        const areas = await Area.findAll({
+            include: [{model: Division}]
+        });
         res.status(200).send(areas);
     } catch (error) {
         res.status(500).send(error);

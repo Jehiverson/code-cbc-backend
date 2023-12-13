@@ -4,11 +4,13 @@ import jwt from 'jsonwebtoken';
 
 import User from "../../bd/models/User.model.js";
 import Role from "../../bd/models/Role.model.js";
+import Agency from "../../bd/models/Agency.model.js";
+import { createToken } from "../../middlewares/_tokenFunctions.js";
 
 const routes = expressRouter();
 
-export const generateToken = (payload, secret, expiresIn) => {
-  return jwt.sign(payload, secret, { expiresIn });
+export const generateToken = (payload, secret) => {
+  return jwt.sign(payload, secret);
 };
 
 export const verifyToken = (token, secret) => {
@@ -22,9 +24,10 @@ export const verifyToken = (token, secret) => {
 
 routes.post('/user', async (req, res) => {
   try {
-    const user = await User.create(req.body);
+    const user = await User.create({...req.body, password: createToken(req.body.password)});
     res.status(201).send(user);
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 });
@@ -33,7 +36,8 @@ routes.post('/user/login', async (req, res) => {
   try {
     const { user, password } = req.body;
 
-    const dataUser = await User.findOne({ where: { user }, include: [Role] });
+    // const dataUser = await User.findOne({ where: { user }, include: [Role] });
+    const dataUser = await User.findOne({where: { user }});
     if (dataUser) {
       const isValidPassword = await bcrypt
         .compare(password, dataUser.password)
@@ -57,7 +61,9 @@ routes.post('/user/login', async (req, res) => {
 
 routes.get('/user', async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: [{model: Agency}]
+    });
     res.status(200).send(users);
   } catch (error) {
     res.status(500).send(error);

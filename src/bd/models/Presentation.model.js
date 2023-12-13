@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { config } from "../functions/connect.js";
+import Quiz from "./Quiz.model.js";
 
 const Presentation = config.define('Presentation', {
   idPresentation: {
@@ -20,5 +21,8 @@ const Presentation = config.define('Presentation', {
   freezeTableName: true,
   timestamps: true
 });
+
+Presentation.belongsTo(Quiz, { foreignKey: 'idQuiz' });
+Quiz.hasMany(Presentation, { foreignKey: 'idQuiz' })
 
 export default Presentation;

@@ -24,4 +24,8 @@ const Quiz = config.define('Quiz', {
   timestamps: true
 });
 
+Question.belongsTo(Quiz, { foreignKey: 'idQuiz' });
+Quiz.hasMany(Question, { foreignKey: 'idQuiz' })
+
+
 export default Quiz;

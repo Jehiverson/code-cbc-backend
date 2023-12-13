@@ -15,6 +15,8 @@ const Answer = config.define('Answer', {
   },
   description: DataTypes.TEXT,
   isCorrect: DataTypes.BOOLEAN,
+  value: DataTypes.FLOAT,
+  type: DataTypes.STRING,
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE

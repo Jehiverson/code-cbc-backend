@@ -12,7 +12,7 @@ const User = config.define('User', {
     autoIncrement: true,
   },
   idAgency: DataTypes.INTEGER,
-  idRole: DataTypes.INTEGER,
+  // idRole: DataTypes.INTEGER,
   name: {
     type: DataTypes.STRING,
   },
@@ -39,7 +39,7 @@ const User = config.define('User', {
 });
 
 
-User.belongsTo(Role, {foreignKey: 'idRole'});
+// User.belongsTo(Role, {foreignKey: 'idRole'});
 
 User.belongsTo(Agency, {foreignKey: 'idAgency'});
 Agency.hasOne(User, {foreignKey: 'idAgency'});

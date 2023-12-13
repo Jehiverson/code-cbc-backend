@@ -1,5 +1,6 @@
 import { Router as expressRouter } from "express";
 import Agency from "../../bd/models/Agency.model.js";
+import Area from "../../bd/models/Area.model.js";
 
 const routes = expressRouter();
 
@@ -14,7 +15,9 @@ routes.post('/agency', async (req, res) => {
 
 routes.get('/agency', async (req, res) => {
     try {
-        const agencies = await Agency.findAll();
+        const agencies = await Agency.findAll({
+            include: [{model: Area}]
+        });
         res.status(200).send(agencies);
     } catch (error) {
         res.status(500).send(error);
@@ -82,6 +85,26 @@ routes.delete('/agency/:id', async (req, res) => {
     }
 });
 
+routes.post("/agency/area/name", async (req, res) => {
+    try {
+        console.log("BUSCAR AGENCIA DE ", req.body.area);
+        const data = await Agency.findAll({
+            attributes: ['name'],
+            include: [
+                {
+                    model: Area,
+                    attributes: [],
+                    where: {name: req.body.area},
+                },
+            ],
+            group: ['Agency.name'],
+        });
+        res.status(200).send(data);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
 
 
 export default routes;

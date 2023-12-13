@@ -1,6 +1,7 @@
 import { Router as expressRouter } from "express";
 import Presentation from "../../bd/models/Presentation.model.js";
 import PresentationItem from "../../bd/models/PresentationItem.model.js";
+import Quiz from "../../bd/models/Quiz.model.js";
 
 const routes = expressRouter();
 
@@ -15,9 +16,15 @@ routes.post('/presentation', async (req, res) => {
 
 routes.get('/presentation', async (req, res) => {
   try {
-    const presentations = await Presentation.findAll();
+    const presentations = await Presentation.findAll({
+      include: [
+        {model: Quiz},
+        {model: PresentationItem},
+      ]
+    });
     res.status(200).send(presentations);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });
@@ -37,7 +44,7 @@ routes.get('/presentation/:id', async (req, res) => {
 
 routes.get('/presentation/quiz/:id', async (req, res) => {
   try {
-    const presentation = await Presentation.findOne({
+    const presentation = await Presentation.findAll({
       where: { idQuiz: req.params.id },
       include: [{ model: PresentationItem }]
     });
