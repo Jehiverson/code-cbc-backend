@@ -6,6 +6,7 @@ import User from "../../bd/models/User.model.js";
 import Role from "../../bd/models/Role.model.js";
 import Agency from "../../bd/models/Agency.model.js";
 import { createToken } from "../../middlewares/_tokenFunctions.js";
+import RoleUser from "../../bd/models/RoleUser.model.js";
 
 const routes = expressRouter();
 
@@ -24,7 +25,15 @@ export const verifyToken = (token, secret) => {
 
 routes.post('/user', async (req, res) => {
   try {
-    const user = await User.create({...req.body, password: createToken(req.body.password)});
+    const { password } = req.body;
+    const saltRounds = 10;
+    console.log(password);
+
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(`${password}`, salt);
+    console.log("PASSWORD", hash);
+
+    const user = await User.create({...req.body, password: hash});
     res.status(201).send(user);
   } catch (error) {
     console.log(error);
@@ -37,7 +46,10 @@ routes.post('/user/login', async (req, res) => {
     const { user, password } = req.body;
 
     // const dataUser = await User.findOne({ where: { user }, include: [Role] });
-    const dataUser = await User.findOne({where: { user }});
+    const dataUser = await User.findOne({
+      include: [{model: RoleUser}],
+      where: { user }
+    });
     if (dataUser) {
       const isValidPassword = await bcrypt
         .compare(password, dataUser.password)

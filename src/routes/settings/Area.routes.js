@@ -70,4 +70,16 @@ routes.delete('/area/:id', async (req, res) => {
     }
 });
 
+routes.get('/area/division/:id', async (req, res) => {
+    try {
+        const data = await Area.findAll({
+            include: [{model: Division}],
+            where: {idDivision: req.params.id}
+        });
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 export default routes;

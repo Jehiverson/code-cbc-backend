@@ -5,8 +5,9 @@ const routes = expressRouter();
 
 routes.post('/division', async (req, res) => {
   try {
-    const Division = await Division.create(req.body);
-    res.status(201).send(Division);
+    const division = await Division.create(req.body);
+    console.log(division);
+    res.status(201).send(division);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -47,6 +48,7 @@ routes.put('/division/:id', async (req, res) => {
       res.status(404).send({ message: 'Division not found' });
     }
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 });
