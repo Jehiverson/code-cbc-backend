@@ -7,6 +7,7 @@ import Permission from "./Permission.routes.js";
 import PermissionRole from "./PermissionRole.routes.js";
 import Role from "./Role.routes.js";
 import User from "./User.routes.js";
+import RoleUser from "./RoleUser.routes.js";
 
 const settings = [
     Agency,
@@ -17,7 +18,8 @@ const settings = [
     Permission,
     PermissionRole,
     Role,
-    User
+    User,
+    RoleUser
 ]
 
 export { settings };

@@ -7,6 +7,8 @@ import Role from "../../bd/models/Role.model.js";
 import Agency from "../../bd/models/Agency.model.js";
 import { createToken } from "../../middlewares/_tokenFunctions.js";
 import RoleUser from "../../bd/models/RoleUser.model.js";
+import Area from "../../bd/models/Area.model.js";
+import Division from "../../bd/models/Division.model.js";
 
 const routes = expressRouter();
 
@@ -50,6 +52,7 @@ routes.post('/user/login', async (req, res) => {
       include: [{model: RoleUser}],
       where: { user }
     });
+    console.log(dataUser);
     if (dataUser) {
       const isValidPassword = await bcrypt
         .compare(password, dataUser.password)
@@ -74,7 +77,13 @@ routes.post('/user/login', async (req, res) => {
 routes.get('/user', async (req, res) => {
   try {
     const users = await User.findAll({
-      include: [{model: Agency}]
+      include: [
+        {model: Agency, include: [
+          {model: Area, include: [
+            {model: Division}
+          ]}
+        ]}
+      ]
     });
     res.status(200).send(users);
   } catch (error) {
@@ -97,16 +106,20 @@ routes.get('/user/:id', async (req, res) => {
 
 routes.put('/user/:id', async (req, res) => {
   try {
+    let params = {}
+    if (req.body?.password) {
+      const { password } = req.body;
+      const saltRounds = 10;
 
-    const { password } = req.body;
-    const saltRounds = 10;
-    console.log(password);
+      const salt = await bcrypt.genSalt(saltRounds);
+      const hash = await bcrypt.hash(`${password}`, salt);
 
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(`${password}`, salt);
-    console.log("PASSWORD", hash);
-
-    const updated = await User.update({ ...req.body, password: hash }, {
+      params = { ...req.body, password: hash }
+    } else {
+      params = req.body
+    }
+    console.log("[ PARAMS ]", params);
+    const updated = await User.update(params, {
       where: { idUser: req.params.id }
     });
 
@@ -117,6 +130,7 @@ routes.put('/user/:id', async (req, res) => {
       res.status(404).send({ message: 'User not found' });
     }
   } catch (error) {
+    console.log("[ ERROR ]", error)
     res.status(400).send(error);
   }
 });
