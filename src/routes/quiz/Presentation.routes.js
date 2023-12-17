@@ -46,7 +46,10 @@ routes.get('/presentation/quiz/:id', async (req, res) => {
   try {
     const presentation = await Presentation.findAll({
       where: { idQuiz: req.params.id },
-      include: [{ model: PresentationItem }]
+      include: [{
+        model: PresentationItem,
+        where: {state: "Activo"}
+      }]
     });
     if (presentation) {
       res.status(200).send(presentation);

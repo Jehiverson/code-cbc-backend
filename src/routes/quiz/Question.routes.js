@@ -49,7 +49,10 @@ routes.get('/question/quiz/:id', async (req, res) => {
   try {
     const question = await Question.findAll({
       where: { idQuiz: req.params.id },
-      include: [{ model: Answer }]
+      include: [{
+        model: Answer,
+        where: {state: "Activo"}
+      }]
     });
     let tmpData = []
     question.forEach((item) => tmpData.push(item.dataValues))
