@@ -1,7 +1,6 @@
 import {DataTypes} from "sequelize";
 import { config } from "../functions/connect.js";
 
-import Role from "./Role.model.js";
 import Agency from "./Agency.model.js";
 
 const User = config.define('User', {
@@ -12,7 +11,6 @@ const User = config.define('User', {
     autoIncrement: true,
   },
   idAgency: DataTypes.INTEGER,
-  // idRole: DataTypes.INTEGER,
   name: {
     type: DataTypes.STRING,
   },
@@ -20,6 +18,9 @@ const User = config.define('User', {
     type: DataTypes.STRING,
   },
   password: {
+    type: DataTypes.STRING,
+  },
+  dpi: {
     type: DataTypes.STRING,
   },
   state: {
