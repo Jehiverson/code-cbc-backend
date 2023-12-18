@@ -3,8 +3,9 @@ import {Sequelize} from "sequelize";
 export const prod = process.env.NODE_ENV === "production";
 
 export const config = new Sequelize(
-    "cbcDev",
+    // "cbcDev",
     // "production",
+    "developer",
     "sqlserver",
     "`I~:z0nVgdz`rs#Z",
     {
