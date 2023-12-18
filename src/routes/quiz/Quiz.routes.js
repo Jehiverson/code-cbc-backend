@@ -19,7 +19,7 @@ routes.get('/quiz', async (req, res) => {
     const quizzes = await Quiz.findAll({
       include: [{model: Question}],
       where: {state: "Activo"},
-      order: [['image', 'ASC']]
+      order: [['order', 'ASC']]
     });
     res.status(200).send(quizzes);
   } catch (error) {

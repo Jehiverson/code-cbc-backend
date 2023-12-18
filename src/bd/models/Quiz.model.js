@@ -15,6 +15,7 @@ const Quiz = config.define('Quiz', {
   image: DataTypes.STRING,
   durationTime: DataTypes.INTEGER,
   attempts: DataTypes.INTEGER,
+  order: DataTypes.INTEGER,
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE
