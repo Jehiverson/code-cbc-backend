@@ -13,6 +13,7 @@ const Presentation = config.define('Presentation', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  name: DataTypes.STRING,
   state: DataTypes.ENUM('Activo', 'Inactivo'),
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE
