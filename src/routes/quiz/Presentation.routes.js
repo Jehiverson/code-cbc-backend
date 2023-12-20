@@ -19,7 +19,10 @@ routes.get('/presentation', async (req, res) => {
     const presentations = await Presentation.findAll({
       include: [
         {model: Quiz},
-        {model: PresentationItem},
+        {
+          model: PresentationItem,
+          order: [['position', 'ASC']]
+        },
       ]
     });
     res.status(200).send(presentations);
@@ -48,7 +51,8 @@ routes.get('/presentation/quiz/:id', async (req, res) => {
       where: { idQuiz: req.params.id },
       include: [{
         model: PresentationItem,
-        where: {state: "Activo"}
+        where: {state: "Activo"},
+        order: [['position', 'ASC']]
       }]
     });
     if (presentation) {
